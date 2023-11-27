@@ -9,3 +9,39 @@ datasource db {
     provider = "postgresql"
     url      = env("DATABASE_URL")
 }
+
+enum Off_Def {
+    OFFENSE
+    DEFENSE
+}
+
+model Player {
+    id            Int     @id
+    name          String
+    Team          Team?   @relation(fields: [teamName], references: [name])
+    age           Int
+    height_inches Int
+    weight        Int
+    college       String
+    off_def       Off_Def
+    position      String
+    player_num    Int
+    image_url     String
+    teamName      String?
+    Injury        Injury?
+}
+
+model Team {
+    name     String   @id
+    roster   Player[]
+    logo_url String
+}
+
+model Injury {
+    id          String   @id @default(uuid())
+    player      Player   @relation(fields: [playerId], references: [id])
+    playerId    Int      @unique
+    date        DateTime
+    status      String
+    description String
+}
